@@ -1,0 +1,35 @@
+//Javascript calculations for positioning ascendancy assets
+var worldPos = this.getNodePositionInfo(this.startNode).position;
+var distanceFromStartNodeCenter = 270;
+var dirX = 0.0;
+var dirY = 1.0;
+var distToCentre = Math.sqrt(worldPos.x * worldPos.x + worldPos.y * worldPos.y);
+var isCentered = Math.abs(worldPos.x) < 10.0 && Math.abs(worldPos.y) < 10.0;
+if(!isCentered){
+	dirX = worldPos.x / distToCentre;
+	dirY = -worldPos.y / distToCentre;
+}
+var zoom = this.viewPort.zoom;
+var ascButtonRot = Math.atan2(dirX, dirY);
+var img = this.assets[this.ascendancyButton.state][zoom];
+var buttonCX = worldPos.x + distanceFromStartNodeCenter * Math.cos(ascButtonRot + Math.PI/2);
+var buttonCY = worldPos.y + distanceFromStartNodeCenter * Math.sin(ascButtonRot + Math.PI/2);
+var buttonPoint = new Point(buttonCX, buttonCY);
+
+var classArtImage = this.assets['Classes'+this.ascendancyClassName()][zoom];
+var imageCX = worldPos.x + (distanceFromStartNodeCenter + classArtImage.height/zoom/2) * Math.cos(ascButtonRot + Math.PI/2);
+var imageCY = worldPos.y + (distanceFromStartNodeCenter + classArtImage.height/zoom/2) * Math.sin(ascButtonRot + Math.PI/2);
+var imagePoint = new Point(imageCX, imageCY);
+
+var ascendancyBounds = new Bounds();
+ascendancyBounds.tl = new Point(imagePoint.x - classArtImage.width/zoom/2, imagePoint.y - classArtImage.height/zoom/2);
+ascendancyBounds.br = new Point(imagePoint.x + classArtImage.width/zoom/2, imagePoint.y + classArtImage.height/zoom/2);
+
+//Flavour text positioning information and text is included in opts
+//Positioned from the top left of the Class Art Image
+
+//All ascendancy subgraphs are composed of nodes that have been marked as ascendancy nodes.  These subgraphs have been created around the outside of the normal graph, and are hidden in the normal view of the graph.
+//Each ascendancy subgraph has an ascendancy start node, similar to the regular class start node.  An ascendancy subgraph should be displayed such that this start node is centred in the ascendancy background image.
+//Any connection between an ascendancy node and a non ascendancy node is hidden.
+
+//Source Art is included in the Classes folder and Juggernaut0-3.png are included as examples of image size at each zoom level.
